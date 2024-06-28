@@ -3,7 +3,7 @@ import SideBar from "../components/SideBar";
 
 const Container = () => {
   return (
-    <div className="flex w-full min-h-[87.5vh]">
+    <div className="flex w-full">
       <SideBar />
       <Board />
     </div>
