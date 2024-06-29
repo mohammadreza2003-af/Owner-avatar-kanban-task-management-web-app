@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export type TypeBoards = TypeBoard[];
 
 export type TypeBoard = {
@@ -9,6 +11,7 @@ export type TypeBoard = {
 export type TypeColumn = {
   name: string;
   tasks: TypeTask[];
+  id: number;
 };
 
 export type TypeTask = {
@@ -20,4 +23,11 @@ export type TypeTask = {
 
 export type StateType = {
   boards: TypeBoards;
+};
+export type ModalProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  description: string;
+  children: ReactNode;
 };

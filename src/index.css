@@ -1,9 +1,4 @@
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
-:root {
-    scrollbar-width: none;
-        border: none;
-        box-sizing: border-box;
-        padding: 0;
-    }
+  @tailwind components;
+  @tailwind utilities;
+  

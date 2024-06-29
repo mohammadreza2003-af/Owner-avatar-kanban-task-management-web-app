@@ -17,14 +17,24 @@ const boards = createSlice({
         newboard.isActive = true;
       }
     },
+    addBoard: (state, action) => {
+      state.push(action.payload);
+      state.forEach((board) => {
+        board.isActive = false;
+      });
+      const newboard = state.find(
+        (board) => board.name === action.payload.name
+      );
+      if (newboard) {
+        newboard.isActive = true;
+      }
+    },
   },
 });
-
-console.log(databoards);
 
 export const activeBoard: TypeBoard = databoards.filter(
   (board) => board.isActive === true
 )[0];
 
-export const { setBoard } = boards.actions;
+export const { setBoard, addBoard } = boards.actions;
 export default boards;
