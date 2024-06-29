@@ -6,6 +6,7 @@ export default {
       colors: {
         colorLightGrey: "rgb(244, 247, 253)",
         colorLightWhite: "rgb(255, 255, 255)",
+        colorLowGray: "rgb(130, 143, 163)",
         colorMediumGrey: "rgb(43  , 44, 55)",
         colorHighGrey: "rgb(32  , 33, 44)",
         colorMainPurple: "rgb(100, 96, 199)",

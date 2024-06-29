@@ -1,13 +1,15 @@
+import { TypeColumn } from "../constants/types";
 import Task from "./Task";
 
-const Column = ({ data }) => {
-  console.log(data);
+const Column = ({ data }: { data: TypeColumn }) => {
   return (
-    <div>
-      <p className="text-colorLightGrey mb-4">Todo ({data.tasks.length})</p>
+    <div className="min-w-[280px]">
+      <p className="text-colorLowGray mb-4">
+        {data.name} ({data.tasks.length})
+      </p>
       <div className="flex flex-col gap-y-4">
-        {data.tasks.map((task) => (
-          <Task data={task} />
+        {data.tasks.map((task, index) => (
+          <Task key={index} data={task} />
         ))}
       </div>
     </div>
