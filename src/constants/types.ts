@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { Dispatch, SetStateAction, ReactNode } from "react";
 
 export type TypeBoards = TypeBoard[];
 
@@ -28,6 +28,14 @@ export type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  description: string;
   children: ReactNode;
+};
+export type EditModalProps = {
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setBoard: Dispatch<SetStateAction<TypeBoard>>;
+  title: string;
+  subTitle: string;
+  board: TypeBoard;
+  submitFuntion: () => void;
 };

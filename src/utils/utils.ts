@@ -3,13 +3,19 @@ import { TypeBoard } from "../constants/types";
 
 export const handleColumnNameChange = (
   data: TypeBoard,
-  index: number,
+  id: number,
   event: ChangeEvent<HTMLInputElement>,
   setter: Dispatch<SetStateAction<TypeBoard>>
 ) => {
-  const updatedColumns = [...data.columns];
-  updatedColumns[index].name = event.target.value;
-
+  const updatedColumns = data.columns.map((col, index) => {
+    if (index === id) {
+      return {
+        ...col,
+        name: event.target.value,
+      };
+    }
+    return col;
+  });
   setter((prevState) => ({
     ...prevState,
     columns: updatedColumns,

@@ -29,6 +29,15 @@ const boards = createSlice({
         newboard.isActive = true;
       }
     },
+    editBoardAndSave: (state, action) => {
+      const index = state.findIndex(
+        (board) => board.isActive === action.payload.isActive
+      );
+      console.log(index);
+      if (index !== -1) {
+        state[index] = action.payload;
+      }
+    },
   },
 });
 
@@ -36,5 +45,5 @@ export const activeBoard: TypeBoard = databoards.filter(
   (board) => board.isActive === true
 )[0];
 
-export const { setBoard, addBoard } = boards.actions;
+export const { setBoard, addBoard, editBoardAndSave } = boards.actions;
 export default boards;
