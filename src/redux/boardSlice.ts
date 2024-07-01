@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import data from "../constants/data.json";
-import { TypeBoard, TypeBoards } from "../constants/types";
+import { TypeBoard, TypeBoards, TypeTask } from "../constants/types";
 
 const databoards: TypeBoards = data.boards;
 
@@ -38,6 +38,49 @@ const boards = createSlice({
         state[index] = action.payload;
       }
     },
+    deleteBoard: (state, action) => {
+      const index = state.findIndex((board) => board.name === action.payload);
+      if (index !== -1) {
+        state.splice(index, 1);
+        if (state.length > 0) {
+          const nextIndex = index === 0 ? 0 : index - 1;
+          state[nextIndex].isActive = true;
+        }
+      }
+    },
+    editTask: (state, action) => {
+      const {
+        boardName,
+        task,
+        indexes,
+      }: {
+        boardName: string;
+        task: TypeTask;
+        indexes: {
+          taskIndex: number;
+          colIndex: number;
+        };
+      } = action.payload;
+
+      const { colIndex, taskIndex } = indexes;
+
+      const boardIndex = state.findIndex((board) => board.name === boardName);
+
+      if (boardIndex !== -1) {
+        const newIndexColumn = state[boardIndex].columns.findIndex(
+          (col) => col.name === task.status
+        );
+        if (newIndexColumn === colIndex) {
+          state[boardIndex].columns[colIndex].tasks[taskIndex] = task;
+        } else {
+          const indexr = state[boardIndex].columns[newIndexColumn].tasks.length;
+          state[boardIndex].columns[colIndex].tasks.splice(taskIndex, 1);
+          state[boardIndex].columns[newIndexColumn].tasks[indexr] = task;
+        }
+        console.log(colIndex, "colIndex");
+        console.log(taskIndex, "taskIndex");
+      }
+    },
   },
 });
 
@@ -45,5 +88,6 @@ export const activeBoard: TypeBoard = databoards.filter(
   (board) => board.isActive === true
 )[0];
 
-export const { setBoard, addBoard, editBoardAndSave } = boards.actions;
+export const { setBoard, addBoard, editBoardAndSave, deleteBoard, editTask } =
+  boards.actions;
 export default boards;

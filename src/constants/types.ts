@@ -39,3 +39,29 @@ export type EditModalProps = {
   board: TypeBoard;
   submitFuntion: () => void;
 };
+export type EditTaskModalProps = {
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setTask: Dispatch<SetStateAction<TypeTask>>;
+  title: string;
+  subTitle: string;
+  task: TypeTask;
+  column: TypeColumn[];
+  submitFuntion: () => void;
+};
+export type AddTaskModalProps = {
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setTask: Dispatch<SetStateAction<TypeTask>>;
+  title: string;
+  subTitle: string;
+  task: TypeTask;
+  column: TypeColumn[];
+  submitFuntion: () => void;
+};
+export type DeleteModalProps = {
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  title: string;
+  onfunctionality: () => void;
+};

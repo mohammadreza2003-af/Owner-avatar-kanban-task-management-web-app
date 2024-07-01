@@ -14,7 +14,7 @@ const SideBar = () => {
   });
 
   return (
-    <div className="w-[260px] flex-shrink-0 col-span-4  bg-colorMediumGrey py-4 min-h-[87.5vh]">
+    <div className="w-[260px] flex-shrink-0 col-span-4  bg-colorMediumGrey py-4 min-h-[87.5vh] border-r border-r-slate-600">
       <p className="font-semibold text-[16px] text-colorLowGray ml-4 uppercase">
         All board ({borads.length})
       </p>

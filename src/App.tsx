@@ -3,7 +3,7 @@ import Container from "./views/Container";
 
 const App = () => {
   return (
-    <div>
+    <div className="font-Jakarta">
       <Header />
       <Container />
     </div>

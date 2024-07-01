@@ -9,6 +9,9 @@ module.exports = {
   ],
   prefix: "",
   theme: {
+    fontFamily: {
+      Jakarta: ["Plus Jakarta Sans", "sans-serif"],
+    },
     container: {
       center: true,
       padding: "2rem",

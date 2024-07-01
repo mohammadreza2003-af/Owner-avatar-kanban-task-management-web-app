@@ -6,23 +6,24 @@ const RuButton = ({
   children,
   customStyle,
 }: {
-  functionlity: () => void;
+  functionlity?: () => void;
   children: ReactNode;
   customStyle?: {
-    backgroundColor: {
+    backgroundColor?: {
       color: string;
     };
+    padding?: string | number;
     className: string;
   };
 }) => {
   return (
     <Button
       style={{
-        background: customStyle?.backgroundColor.color || "none",
-        padding: 0,
+        background: customStyle?.backgroundColor?.color || "none",
+        padding: customStyle?.padding || 0,
       }}
       className={customStyle?.className}
-      onClick={() => functionlity}
+      onClick={() => functionlity && functionlity()}
     >
       {children}
     </Button>

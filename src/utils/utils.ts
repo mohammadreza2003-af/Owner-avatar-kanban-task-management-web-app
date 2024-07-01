@@ -61,3 +61,10 @@ export const handleChangeBoardName = (
 ) => {
   setter((prevState) => ({ ...prevState, name: event.target.value }));
 };
+
+export const handleChangeTaskName = (
+  event: ChangeEvent<HTMLInputElement>,
+  setter: Dispatch<SetStateAction<TypeBoard>>
+) => {
+  setter((prevState) => ({ ...prevState, name: event.target.value }));
+};
