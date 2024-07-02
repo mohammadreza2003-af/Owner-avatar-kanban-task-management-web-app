@@ -2,27 +2,40 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectActiveBoard } from "../utils/selector";
 import Dropdown from "./DropDown";
 import { useEffect, useState } from "react";
-import { TypeBoard } from "../constants/types";
+import { TypeBoard, TypeTask } from "../constants/types";
 import { defaultBoard } from "../constants/defaultValue";
 import EditModal from "./Modal/EditModal";
-import { deleteBoard, editBoardAndSave } from "../redux/boardSlice";
+import { addTask, deleteBoard, editBoardAndSave } from "../redux/boardSlice";
 import DeleteModal from "./Modal/DeleteModal";
 import RuButton from "./RuButton";
+import AddTaskModal from "./Modal/AddTaskModal";
 
 const Navbar = () => {
   const dispatch = useDispatch();
+
+  const defalutTask = {
+    title: "",
+    description: "",
+    status: "",
+    subtasks: [],
+  };
   const activeBoard = useSelector(selectActiveBoard);
   const [editBoard, setEditBoard] = useState<TypeBoard>(defaultBoard);
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
   const [typeModal, setTypeModal] = useState<string>("");
 
+  const [task, setTask] = useState<TypeTask>(defalutTask);
+
   useEffect(() => {
     if (activeBoard) {
       setEditBoard(activeBoard);
     }
-  }, [activeBoard]);
+    if (!isDialogOpen && activeBoard) {
+      setEditBoard(activeBoard);
+      setTask(defalutTask);
+    }
+  }, [activeBoard, isDialogOpen]);
 
-  console.log(activeBoard, "active Board");
   return (
     <nav className="flex items-center w-full">
       <div className="min-w-[260px] flex items-center justify-center h-[104px] border-r border-r-slate-600 md:py-8 py-8">
@@ -38,6 +51,10 @@ const Navbar = () => {
               className: "rounded-full",
               padding: "12px 18px",
               backgroundColor: { color: "rgb(100, 96, 199)" },
+            }}
+            functionlity={() => {
+              setDialogOpen(true);
+              setTypeModal("addTask");
             }}
           >
             + Add New Task
@@ -66,6 +83,21 @@ const Navbar = () => {
           setIsOpen={setDialogOpen}
           onfunctionality={() => {
             dispatch(deleteBoard(activeBoard?.name));
+            setDialogOpen(false);
+          }}
+        />
+      )}
+      {typeModal === "addTask" && isDialogOpen && (
+        <AddTaskModal
+          title={"Edit Task"}
+          task={task}
+          setTask={setTask}
+          column={editBoard.columns}
+          isOpen={isDialogOpen}
+          setIsOpen={setDialogOpen}
+          subTitle={"Save Chenges"}
+          submitFuntion={() => {
+            dispatch(addTask(task));
             setDialogOpen(false);
           }}
         />

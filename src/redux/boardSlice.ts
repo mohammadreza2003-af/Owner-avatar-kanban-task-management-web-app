@@ -77,8 +77,17 @@ const boards = createSlice({
           state[boardIndex].columns[colIndex].tasks.splice(taskIndex, 1);
           state[boardIndex].columns[newIndexColumn].tasks[indexr] = task;
         }
-        console.log(colIndex, "colIndex");
-        console.log(taskIndex, "taskIndex");
+      }
+    },
+    addTask: (state, action) => {
+      const index = state.findIndex(
+        (board) => board.isActive === true
+      );
+      if (index !== -1) {
+        const columnIndex = state[index].columns.findIndex((col) => col.name === action.payload.status);
+        console.log(index,columnIndex,"Sta");
+        state[index].columns[columnIndex].tasks.push(action.payload)
+
       }
     },
   },
@@ -88,6 +97,12 @@ export const activeBoard: TypeBoard = databoards.filter(
   (board) => board.isActive === true
 )[0];
 
-export const { setBoard, addBoard, editBoardAndSave, deleteBoard, editTask } =
-  boards.actions;
+export const {
+  setBoard,
+  addBoard,
+  editBoardAndSave,
+  deleteBoard,
+  editTask,
+  addTask,
+} = boards.actions;
 export default boards;

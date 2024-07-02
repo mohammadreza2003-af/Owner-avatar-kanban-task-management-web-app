@@ -23,6 +23,7 @@ const RuButton = ({
         padding: customStyle?.padding || 0,
       }}
       className={customStyle?.className}
+      type="submit"
       onClick={() => functionlity && functionlity()}
     >
       {children}

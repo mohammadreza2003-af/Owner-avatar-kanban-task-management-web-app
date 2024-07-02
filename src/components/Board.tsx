@@ -42,6 +42,13 @@ const Board = () => {
     }
   }, [activeBoard]);
 
+
+  useEffect(() => {
+    if (!isDialogOpen && activeBoard) {
+      setEditBoard(activeBoard);
+    }
+  }, [activeBoard, isDialogOpen]);
+  
   console.log(task, "Task");
   return (
     <div className="w-full flex-1 bg-colorHighGrey py-4 px-4 overflow-x-scroll max-h-[87.5vh] ">

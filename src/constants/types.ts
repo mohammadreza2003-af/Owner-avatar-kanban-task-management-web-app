@@ -65,3 +65,11 @@ export type DeleteModalProps = {
   title: string;
   onfunctionality: () => void;
 };
+
+export type ErrorStateEditModal = { name: string; columns: string[] };
+
+export type ErrorStateAddTask = {
+  title: string;
+  subtasks: string[];
+  status: string;
+};
