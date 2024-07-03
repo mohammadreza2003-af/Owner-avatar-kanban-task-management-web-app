@@ -1,16 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { StateType, TypeBoard, TypeBoards } from "../constants/types";
 import { addBoard, setBoard } from "../redux/boardSlice";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import EditModal from "./Modal/EditModal";
 import { defaultBoard } from "../constants/defaultValue";
 import { useMedia } from "react-use";
 
-const SideBar = ({
-  setIsOpen,
-}: {
-  setIsOpen?: Dispatch<SetStateAction<boolean>>;
-}) => {
+const SideBar = () => {
   const dispatch = useDispatch();
   const [newBoard, setNewBoard] = useState<TypeBoard>(defaultBoard);
   const [isDialogOpen, setDialogOpen] = useState(false);
