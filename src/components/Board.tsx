@@ -129,7 +129,7 @@ const Board = () => {
           setBoard={setEditBoard}
           isOpen={isDialogOpen}
           setIsOpen={setDialogOpen}
-          subTitle={"Save Chenges"}
+          subTitle={"Save Changes"}
           submitFuntion={() => {
             dispatch(editBoardAndSave(editBoard));
             setDialogOpen(false);
@@ -144,7 +144,7 @@ const Board = () => {
           column={editBoard.columns}
           isOpen={isDialogOpen}
           setIsOpen={setDialogOpen}
-          subTitle={"Save Chenges"}
+          subTitle={"Save Changes"}
           submitFunction={() => {
             dispatch(
               editTask({ task: task, boardName: editBoard.name, indexes })
@@ -161,7 +161,7 @@ const Board = () => {
           column={editBoard.columns}
           isOpen={isDialogOpen}
           setIsOpen={setDialogOpen}
-          subTitle={"Save Chenges"}
+          subTitle={"Save Changes"}
           setTypeModal={setTypeModal}
           boardName={activeBoard?.name || ""}
           submitFunction={() => {

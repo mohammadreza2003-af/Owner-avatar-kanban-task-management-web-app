@@ -44,10 +44,10 @@ const Navbar = () => {
   if (isMobile) {
     return (
       <nav className="flex items-center justify-between w-full px-4">
-        <div className="flex items-center justify-center gap-x-6">
+        <div className="flex items-center justify-center gap-x-2">
           <img src="/assets/logo-mobile.svg" />
           <div className="flex items-center gap-x-2">
-            <h2 className="text-2xl text-colorLightGrey font-bold">
+            <h2 className="md:text-2xl text-lg text-colorLightGrey font-bold">
               {activeBoard?.name}
             </h2>
             <RuButton
@@ -92,9 +92,7 @@ const Navbar = () => {
             />
           </div>
         </div>
-        {isNav && (
-          <NavModal setIsOpen={setIsNav} isOpen={isNav} title="Board" />
-        )}
+        {isNav && <NavModal setIsOpen={setIsNav} isOpen={isNav} title="" />}
         {isDialogOpen && typeModal === "edit" && (
           <EditModal
             type="editBoard"
@@ -103,7 +101,7 @@ const Navbar = () => {
             setBoard={setEditBoard}
             isOpen={isDialogOpen}
             setIsOpen={setDialogOpen}
-            subTitle={"Save Chenges"}
+            subTitle={"Save Changes"}
             submitFuntion={() => {
               dispatch(editBoardAndSave(editBoard));
               setDialogOpen(false);
@@ -130,7 +128,7 @@ const Navbar = () => {
             column={editBoard.columns}
             isOpen={isDialogOpen}
             setIsOpen={setDialogOpen}
-            subTitle={"Save Chenges"}
+            subTitle={"Save Changes"}
             submitFunction={() => {
               dispatch(addTask(task));
               setDialogOpen(false);
@@ -186,7 +184,7 @@ const Navbar = () => {
           setBoard={setEditBoard}
           isOpen={isDialogOpen}
           setIsOpen={setDialogOpen}
-          subTitle={"Save Chenges"}
+          subTitle={"Save Changes"}
           submitFuntion={() => {
             dispatch(editBoardAndSave(editBoard));
             setDialogOpen(false);
@@ -213,7 +211,7 @@ const Navbar = () => {
           column={editBoard.columns}
           isOpen={isDialogOpen}
           setIsOpen={setDialogOpen}
-          subTitle={"Save Chenges"}
+          subTitle={"Save Changes"}
           submitFunction={() => {
             dispatch(addTask(task));
             setDialogOpen(false);

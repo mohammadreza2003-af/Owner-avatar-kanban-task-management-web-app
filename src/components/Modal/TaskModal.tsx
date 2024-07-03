@@ -62,10 +62,9 @@ const TaskModal = ({
           setTypeModal={setTypeModal}
         />
       </div>
-      <p className="text-colorLowGray">
+      <p className="text-colorLowGray w-[20%]">
         {task.description.length > 0 ? task.description : "No description"}
       </p>
-
       <span className="text-colorLightGrey font-semibold text-sm">
         Subtasks({numberOfComSubTask} of {task.subtasks.length})
       </span>

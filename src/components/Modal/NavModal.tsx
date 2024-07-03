@@ -5,7 +5,7 @@ import { Modal } from "./Modal";
 const NavModal = ({ isOpen, setIsOpen, title }: NavModalProps) => {
   return (
     <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={title}>
-      <SideBar />
+      <SideBar setIsOpen={setIsOpen} />
     </Modal>
   );
 };

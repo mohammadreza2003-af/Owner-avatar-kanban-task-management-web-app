@@ -1,12 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import { StateType, TypeBoard, TypeBoards } from "../constants/types";
 import { addBoard, setBoard } from "../redux/boardSlice";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import EditModal from "./Modal/EditModal";
 import { defaultBoard } from "../constants/defaultValue";
 import { useMedia } from "react-use";
 
-const SideBar = () => {
+const SideBar = ({
+  setIsOpen,
+}: {
+  setIsOpen?: Dispatch<SetStateAction<boolean>>;
+}) => {
   const dispatch = useDispatch();
   const [newBoard, setNewBoard] = useState<TypeBoard>(defaultBoard);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -31,7 +35,9 @@ const SideBar = () => {
         {borads.map((board, index) => (
           <button
             key={index}
-            onClick={() => dispatch(setBoard(board.name))}
+            onClick={() => {
+              dispatch(setBoard(board.name));
+            }}
             className={`${
               board.isActive === true
                 ? "bg-colorMainPurple text-colorLightGrey"
@@ -47,7 +53,9 @@ const SideBar = () => {
           </button>
         ))}
         <button
-          onClick={() => setDialogOpen(true)}
+          onClick={() => {
+            setDialogOpen(true);
+          }}
           className={`px-4 w-[90%] rounded-r-[28px] py-4 flex items-center text-colorMainPurple font-semibold hover:text-colorMainPurple hover:bg-colorLightGrey transition-all duration-300 ease-in-out`}
         >
           <img src="/assets/icon-board.svg" alt="icon-board" className="mr-4" />
