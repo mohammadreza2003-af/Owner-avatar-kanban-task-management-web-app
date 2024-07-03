@@ -2,19 +2,21 @@ import { useDispatch, useSelector } from "react-redux";
 import Column from "./Column";
 import { selectActiveBoard } from "../utils/selector";
 import { useEffect, useState } from "react";
-import { TypeBoard, TypeTask } from "../constants/types";
-import { editBoardAndSave, editTask } from "../redux/boardSlice";
+import { StateType, TypeBoard, TypeTask } from "../constants/types";
+import { addBoard, editBoardAndSave, editTask } from "../redux/boardSlice";
 import { defaultBoard } from "../constants/defaultValue";
 import EditModal from "./Modal/EditModal";
 import EditTaskModal from "./Modal/EditTaskModal";
+import TaskModal from "./Modal/TaskModal";
+import RuButton from "./RuButton";
 
 const Board = () => {
   const dispatch = useDispatch();
   const activeBoard = useSelector(selectActiveBoard);
-  console.log(activeBoard);
-
-  const [editBoard, setEditBoard] = useState<TypeBoard>(defaultBoard);
+  const [newBoard, setNewBoard] = useState<TypeBoard>(defaultBoard);
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const boards = useSelector((state: StateType) => state.boards);
+  const [editBoard, setEditBoard] = useState<TypeBoard>(defaultBoard);
   const [indexes, setIndexes] = useState<{
     taskIndex: number;
     colIndex: number;
@@ -23,7 +25,6 @@ const Board = () => {
     colIndex: 0,
   });
 
-  console.log(activeBoard, "indexes");
   const [typeModal, setTypeModal] = useState<string>("");
   const [task, setTask] = useState<TypeTask>({
     title: "",
@@ -42,14 +43,52 @@ const Board = () => {
     }
   }, [activeBoard]);
 
-
   useEffect(() => {
     if (!isDialogOpen && activeBoard) {
       setEditBoard(activeBoard);
     }
   }, [activeBoard, isDialogOpen]);
-  
-  console.log(task, "Task");
+
+  if (boards.length === 0) {
+    return (
+      <>
+        <div className="w-full flex flex-col space-y-4 bg-colorHighGrey py-4 px-4 items-center justify-center overflow-x-scroll max-h-[87.5vh] ">
+          <h2 className="font-semibold text-colorLightWhite text-xl">
+            This board is empty. Create a new column to get started.
+          </h2>
+          <RuButton
+            customStyle={{
+              className: "rounded-full",
+              padding: "16px 18px",
+              backgroundColor: { color: "rgb(100, 96, 199)" },
+            }}
+            functionlity={() => {
+              setDialogOpen(true);
+              setTypeModal("addTask");
+            }}
+          >
+            + Create New Board
+          </RuButton>
+        </div>
+        {isDialogOpen && typeModal === "addTask" && (
+          <EditModal
+            title={"Add new board"}
+            board={newBoard}
+            setBoard={setNewBoard}
+            isOpen={isDialogOpen}
+            setIsOpen={setDialogOpen}
+            subTitle={"Create New Board"}
+            submitFuntion={() => {
+              dispatch(addBoard(newBoard));
+              setDialogOpen(false);
+              setNewBoard(defaultBoard);
+            }}
+          />
+        )}
+      </>
+    );
+  }
+
   return (
     <div className="w-full flex-1 bg-colorHighGrey py-4 px-4 overflow-x-scroll max-h-[87.5vh] ">
       <div className="flex gap-x-8 w-full">
@@ -108,15 +147,16 @@ const Board = () => {
           }}
         />
       )}
-      {typeModal === "addTask" && isDialogOpen && (
-        <EditTaskModal
-          title={"Edit Task"}
+      {typeModal === "task" && isDialogOpen && (
+        <TaskModal
+          title={"Task"}
           task={task}
           setTask={setTask}
           column={editBoard.columns}
           isOpen={isDialogOpen}
           setIsOpen={setDialogOpen}
           subTitle={"Save Chenges"}
+          boardName={activeBoard?.name || ""}
           submitFuntion={() => {
             dispatch(
               editTask({ task: task, boardName: editBoard.name, indexes })

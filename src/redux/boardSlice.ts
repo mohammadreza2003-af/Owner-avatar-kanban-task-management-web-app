@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import data from "../constants/data.json";
 import { TypeBoard, TypeBoards, TypeTask } from "../constants/types";
 
@@ -80,14 +80,46 @@ const boards = createSlice({
       }
     },
     addTask: (state, action) => {
-      const index = state.findIndex(
-        (board) => board.isActive === true
-      );
+      const index = state.findIndex((board) => board.isActive === true);
       if (index !== -1) {
-        const columnIndex = state[index].columns.findIndex((col) => col.name === action.payload.status);
-        console.log(index,columnIndex,"Sta");
-        state[index].columns[columnIndex].tasks.push(action.payload)
+        const columnIndex = state[index].columns.findIndex(
+          (col) => col.name === action.payload.status
+        );
+        console.log(index, columnIndex, "Sta");
+        state[index].columns[columnIndex].tasks.push(action.payload);
+      }
+    },
+    toggleSubtaskCompletion: (
+      state,
+      action: PayloadAction<{
+        boardName: string;
+        taskId: string;
+        subtaskIndex: number;
+      }>
+    ) => {
+      const { boardName, taskId, subtaskIndex } = action.payload;
 
+      console.log(boardName, taskId, subtaskIndex, "Check");
+
+      const boardIndex = state.findIndex((board) => board.name === boardName);
+      if (boardIndex !== -1) {
+        const columnIndex = state[boardIndex].columns.findIndex((column) =>
+          column.tasks.some((task) => task.title === taskId)
+        );
+        if (columnIndex !== -1) {
+          const taskIndex = state[boardIndex].columns[
+            columnIndex
+          ].tasks.findIndex((task) => task.title === taskId);
+          if (taskIndex !== -1) {
+            const subtask =
+              state[boardIndex].columns[columnIndex].tasks[taskIndex].subtasks[
+                subtaskIndex
+              ];
+            if (subtask) {
+              subtask.isCompleted = !subtask.isCompleted;
+            }
+          }
+        }
       }
     },
   },
@@ -104,5 +136,6 @@ export const {
   deleteBoard,
   editTask,
   addTask,
+  toggleSubtaskCompletion,
 } = boards.actions;
 export default boards;

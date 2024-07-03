@@ -23,12 +23,9 @@ const Task = ({
   taskIndex: number;
   setTypeModal: Dispatch<SetStateAction<string>>;
 }) => {
-  let numberOfComSubTask = 0;
-  data.subtasks.forEach((sub) => {
-    if (sub.isCompleted === true) {
-      numberOfComSubTask += 1;
-    }
-  }, 0);
+  const numberOfComSubTask = data.subtasks.filter(
+    (sub) => sub.isCompleted
+  ).length;
 
   return (
     <div
@@ -37,7 +34,7 @@ const Task = ({
         setDialogOpen(true);
         setIndexes({ colIndex: colIndex, taskIndex: taskIndex });
         setTask(data);
-        setTypeModal("editTask");
+        setTypeModal("task");
       }}
     >
       <h2 className="font-semibold text-[16x]">{data.title}</h2>

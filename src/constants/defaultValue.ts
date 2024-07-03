@@ -14,5 +14,10 @@ export const defaultBoard: TypeBoard = {
       tasks: [],
       id: 2,
     },
+    {
+      name: "Done",
+      tasks: [],
+      id: 3,
+    },
   ],
 };
