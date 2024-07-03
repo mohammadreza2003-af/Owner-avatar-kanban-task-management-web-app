@@ -73,6 +73,7 @@ const Navbar = () => {
       </div>
       {isDialogOpen && typeModal === "edit" && (
         <EditModal
+          type="editBoard"
           title={"Edit Board"}
           board={editBoard}
           setBoard={setEditBoard}

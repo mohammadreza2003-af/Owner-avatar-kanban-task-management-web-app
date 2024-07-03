@@ -26,6 +26,8 @@ const Board = () => {
     colIndex: 0,
   });
 
+  console.log(boards);
+
   const [typeModal, setTypeModal] = useState<string>("");
   const [task, setTask] = useState<TypeTask>({
     title: "",
@@ -104,23 +106,26 @@ const Board = () => {
             setIndexes={setIndexes}
           />
         ))}
-        <div className="min-w-[280px] min-h-[540px]">
-          <p className="text-colorLowGray mb-3">Create Board</p>
-          <div
-            onClick={() => {
-              setTypeModal("edit");
-              setDialogOpen(true);
-            }}
-            className="flex flex-col gap-y-4 bg-colorMediumGrey text-colorLowGray hover:text-colorMainPurple w-full h-full rounded-lg justify-center items-center transition-all duration-300 ease-in-out cursor-pointer"
-          >
-            <button className="text-2xl font-semibold">+ New Column</button>
+        {activeBoard && activeBoard?.columns.length <= 6 && (
+          <div className="min-w-[280px] min-h-[540px]">
+            <p className="text-colorLowGray mb-3">Create Board</p>
+            <div
+              onClick={() => {
+                setTypeModal("edit");
+                setDialogOpen(true);
+              }}
+              className="flex flex-col gap-y-4 bg-colorMediumGrey text-colorLowGray hover:text-colorMainPurple w-full h-full rounded-lg justify-center items-center transition-all duration-300 ease-in-out cursor-pointer"
+            >
+              <button className="text-2xl font-semibold">+ New Column</button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
       {typeModal === "edit" && isDialogOpen && (
         <EditModal
           title={"Edit Board"}
           board={editBoard}
+          type="addColumn"
           setBoard={setEditBoard}
           isOpen={isDialogOpen}
           setIsOpen={setDialogOpen}

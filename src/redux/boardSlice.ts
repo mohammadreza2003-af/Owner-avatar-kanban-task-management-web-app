@@ -18,22 +18,26 @@ const boards = createSlice({
       }
     },
     addBoard: (state, action) => {
-      state.push(action.payload);
-      state.forEach((board) => {
-        board.isActive = false;
-      });
-      const newboard = state.find(
+      const existingBoard = state.find(
         (board) => board.name === action.payload.name
       );
-      if (newboard) {
-        newboard.isActive = true;
+      if (!existingBoard) {
+        state.push(action.payload);
+        state.forEach((board) => {
+          board.isActive = false;
+        });
+        const newboard = state.find(
+          (board) => board.name === action.payload.name
+        );
+        if (newboard) {
+          newboard.isActive = true;
+        }
       }
     },
     editBoardAndSave: (state, action) => {
       const index = state.findIndex(
         (board) => board.isActive === action.payload.isActive
       );
-      console.log(index);
       if (index !== -1) {
         state[index] = action.payload;
       }
@@ -85,7 +89,6 @@ const boards = createSlice({
         const columnIndex = state[index].columns.findIndex(
           (col) => col.name === action.payload.status
         );
-        console.log(index, columnIndex, "Sta");
         state[index].columns[columnIndex].tasks.push(action.payload);
       }
     },

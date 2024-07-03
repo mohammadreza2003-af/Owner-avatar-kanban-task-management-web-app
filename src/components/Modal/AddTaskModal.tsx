@@ -41,18 +41,35 @@ const AddTaskModal = ({
     }
   }, [isOpen]);
 
-  const validateTitle = (title: string): string => {
-    return title.trim() === "" ? "Required" : "";
-  };
+  console.log(column, "col", task.status);
 
+  const validateTitle = (title: string): string => {
+    const isDuplicate = column
+      ?.filter((t) => t.name === task.status)[0]
+      ?.tasks.some((task) => task.title.toLowerCase() === title.toLowerCase());
+
+    console.log(isDuplicate, "isDup");
+    if (title.trim() === "") {
+      return "Required";
+    }
+    if (isDuplicate) return "Used";
+
+    return "";
+  };
   const validateSubtasks = (subtasks: Array<{ title: string }>): string[] => {
     const subtaskTitles = subtasks.map((subtask) => subtask.title.trim());
-    const uniqueTitles = new Set(subtaskTitles);
-    return subtaskTitles.map((title) =>
-      uniqueTitles.has(title) ? "" : "Subtask titles must be unique."
-    );
-  };
+    const titleCounts = subtaskTitles.reduce((counts, title) => {
+      counts[title] = (counts[title] || 0) + 1;
+      return counts;
+    }, {} as { [key: string]: number });
 
+    const errors = subtaskTitles.map((title) =>
+      title === "" ? "Required" : titleCounts[title] > 1 ? "Used" : ""
+    );
+
+    console.log(errors, "Eee");
+    return errors;
+  };
   const validateStatus = (status: string): string => {
     return status.trim() === "" ? "Required" : "";
   };

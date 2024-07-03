@@ -47,6 +47,7 @@ const SideBar = () => {
         <EditModal
           title={"Add new board"}
           board={newBoard}
+          type="addNewBoard"
           setBoard={setNewBoard}
           isOpen={isDialogOpen}
           setIsOpen={setDialogOpen}

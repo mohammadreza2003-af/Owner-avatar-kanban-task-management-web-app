@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { EditModalProps, ErrorStateEditModal } from "../../constants/types";
+import {
+  EditModalProps,
+  ErrorStateEditModal,
+  StateType,
+} from "../../constants/types";
 import {
   handleAddColumn,
   handleChangeBoardName,
@@ -10,6 +14,8 @@ import RuButton from "../RuButton";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Modal } from "./Modal";
+import { useSelector } from "react-redux";
+import { selectActiveBoard } from "../../utils/selector";
 
 const EditModal = ({
   isOpen,
@@ -19,13 +25,20 @@ const EditModal = ({
   title,
   subTitle,
   submitFuntion,
+  type,
 }: EditModalProps) => {
+  const activeBoard = useSelector(selectActiveBoard);
+
+  console.log(activeBoard, "active");
+
   const [errors, setErrors] = useState<ErrorStateEditModal>({
     name: "",
     columns: [],
   });
+  const boards = useSelector((state: StateType) => state.boards);
 
-  console.log(isOpen, "isOpen");
+  console.log(board);
+
   useEffect(() => {
     if (isOpen) {
       setErrors({ name: "", columns: [] });
@@ -36,11 +49,17 @@ const EditModal = ({
   }, [isOpen]);
 
   const validateBoardName = (name: string) => {
+    const isDuplicate = boards.some(
+      (board) => board.name.toLowerCase() === name.toLowerCase()
+    );
     if (!name || name.trim() === "") {
       return "Required";
     }
-    if (name !== board.name && board.columns.some((col) => col.name === name)) {
-      return "Board name must be unique";
+    if (type === "editBoard" && isDuplicate && name !== activeBoard?.name) {
+      return "Used";
+    }
+    if (type === "addNewBoard" && isDuplicate) {
+      return "Used";
     }
     return "";
   };
@@ -49,7 +68,11 @@ const EditModal = ({
     if (!name || name.trim() === "") {
       return "Required";
     }
-    if (board.columns.some((col, i) => col.name === name && i !== index)) {
+    if (
+      board.columns.some(
+        (col, i) => col.name.toLowerCase() === name.toLowerCase() && i !== index
+      )
+    ) {
       return "Used";
     }
     return "";
@@ -89,6 +112,7 @@ const EditModal = ({
         Board Name
       </Label>
       <Input
+        disabled={type === "addColumn" ? true : false}
         type="text"
         value={board?.name}
         onChange={handleBoardNameChange}

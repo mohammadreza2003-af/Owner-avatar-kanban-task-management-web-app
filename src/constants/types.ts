@@ -37,6 +37,7 @@ export type EditModalProps = {
   title: string;
   subTitle: string;
   board: TypeBoard;
+  type?: string;
   submitFuntion: () => void;
 };
 export type EditTaskModalProps = {
