@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { AddTaskModalProps, ErrorStateAddTask } from "../../constants/types";
 import RuButton from "../RuButton";
 import { Input } from "../ui/input";
@@ -23,15 +23,13 @@ const AddTaskModal = ({
   title,
   column,
   subTitle,
-  submitFuntion,
+  submitFunction,
 }: AddTaskModalProps) => {
   const [errors, setErrors] = useState<ErrorStateAddTask>({
     title: "",
     subtasks: [],
     status: "",
   });
-
-  console.log(errors, "ee");
 
   useEffect(() => {
     if (!isOpen) {
@@ -48,8 +46,10 @@ const AddTaskModal = ({
   };
 
   const validateSubtasks = (subtasks: Array<{ title: string }>): string[] => {
-    return subtasks.map((subtask) =>
-      subtask.title.trim() === "" ? "Required" : ""
+    const subtaskTitles = subtasks.map((subtask) => subtask.title.trim());
+    const uniqueTitles = new Set(subtaskTitles);
+    return subtaskTitles.map((title) =>
+      uniqueTitles.has(title) ? "" : "Subtask titles must be unique."
     );
   };
 
@@ -58,10 +58,11 @@ const AddTaskModal = ({
   };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTask((prevState) => ({ ...prevState, title: e.target.value }));
+    const newTitle = e.target.value;
+    setTask((prevState) => ({ ...prevState, title: newTitle }));
     setErrors((prevErrors) => ({
       ...prevErrors,
-      title: validateTitle(e.target.value),
+      title: validateTitle(newTitle),
     }));
   };
 
@@ -69,15 +70,13 @@ const AddTaskModal = ({
     index: number,
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const updatedSubtasks = task.subtasks.map((subtask, subIndex) =>
-      subIndex === index ? { ...subtask, title: e.target.value } : subtask
-    );
-    setTask((prevState) => ({ ...prevState, subtasks: updatedSubtasks }));
-    setErrors((prevErrors) => {
-      const newSubtaskErrors = [...prevErrors.subtasks];
-      newSubtaskErrors[index] = validateTitle(e.target.value);
-      return { ...prevErrors, subtasks: newSubtaskErrors };
-    });
+    const newSubtasks = [...task.subtasks];
+    newSubtasks[index] = { ...newSubtasks[index], title: e.target.value };
+    setTask((prevState) => ({ ...prevState, subtasks: newSubtasks }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      subtasks: validateSubtasks(newSubtasks),
+    }));
   };
 
   const handleStatusChange = (value: string) => {
@@ -104,8 +103,28 @@ const AddTaskModal = ({
         status: statusError,
       });
     } else {
-      submitFuntion();
+      submitFunction();
     }
+  };
+
+  const handleAddSubtask = () => {
+    setTask((prevState) => ({
+      ...prevState,
+      subtasks: [...prevState.subtasks, { title: "", isCompleted: false }],
+    }));
+  };
+
+  const handleRemoveSubtask = (index: number) => {
+    const newSubtasks = [...task.subtasks];
+    newSubtasks.splice(index, 1);
+    setTask((prevState) => ({
+      ...prevState,
+      subtasks: newSubtasks,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      subtasks: validateSubtasks(newSubtasks),
+    }));
   };
 
   return (
@@ -115,10 +134,10 @@ const AddTaskModal = ({
       </Label>
       <Input
         type="text"
-        value={task?.title}
+        value={task.title}
         onChange={handleTitleChange}
         id="taskTitle"
-        placeholder="e.g. Web Design"
+        placeholder="Enter task title"
         className="bg-inherit rounded-md border-colorLowGray border text-colorLightGrey"
       />
       {errors.title && <p className="text-red-500">{errors.title}</p>}
@@ -131,7 +150,7 @@ const AddTaskModal = ({
           Description (Optional)
         </Label>
         <Textarea
-          placeholder="Type your message here."
+          placeholder="Type your description here."
           id="description"
           onChange={(e) =>
             setTask((prevState) => ({
@@ -144,61 +163,37 @@ const AddTaskModal = ({
         />
       </div>
 
-      <Label htmlFor="Subtasks" className="text-colorLightGrey font-semibold">
+      <Label htmlFor="subtasks" className="text-colorLightGrey font-semibold">
         Subtasks
       </Label>
-      {task.subtasks.map((sub, index) => (
+      {task.subtasks.map((subtask, index) => (
         <div
-          className="flex items-center justify-between w-full gap-4 text-colorLightGrey"
           key={index}
+          className="flex items-center justify-between w-full gap-4 text-colorLightGrey"
         >
           <Input
             type="text"
-            id="Subtasks"
-            value={sub.title}
-            onChange={(event) => handleSubtaskChange(index, event)}
+            id={`subtask-${index}`}
+            value={subtask.title}
+            onChange={(e) => handleSubtaskChange(index, e)}
+            placeholder="Enter subtask title"
             className="bg-inherit rounded-md border-colorLowGray border"
           />
-          <RuButton
-            functionlity={() => {
-              const updatedSubtasks = task.subtasks.filter(
-                (_, subIndex) => subIndex !== index
-              );
-              setTask((prevState) => ({
-                ...prevState,
-                subtasks: updatedSubtasks,
-              }));
-              setErrors((prevErrors) => {
-                const newSubtaskErrors = prevErrors.subtasks.filter(
-                  (_, subIndex) => subIndex !== index
-                );
-                return { ...prevErrors, subtasks: newSubtaskErrors };
-              });
-            }}
-          >
-            <img src="/assets/icon-cross.svg" />
+          <RuButton functionlity={() => handleRemoveSubtask(index)}>
+            <img src="/assets/icon-cross.svg" alt="Delete subtask" />
           </RuButton>
           {errors.subtasks[index] && (
             <p className="text-red-500">{errors.subtasks[index]}</p>
           )}
         </div>
       ))}
+
       <RuButton
         customStyle={{
           className: "text-colorMainPurple rounded-full font-semibold",
           backgroundColor: { color: "rgb(244, 247, 253)" },
         }}
-        functionlity={() => {
-          const updatedSubtasks = [
-            ...task.subtasks,
-            { title: "", isCompleted: false },
-          ];
-          setTask((prevState) => ({ ...prevState, subtasks: updatedSubtasks }));
-          setErrors((prevErrors) => ({
-            ...prevErrors,
-            subtasks: [...prevErrors.subtasks, ""],
-          }));
-        }}
+        functionlity={handleAddSubtask}
       >
         + Add New Subtask
       </RuButton>

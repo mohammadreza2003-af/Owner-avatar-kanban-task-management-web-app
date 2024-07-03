@@ -99,8 +99,6 @@ const boards = createSlice({
     ) => {
       const { boardName, taskId, subtaskIndex } = action.payload;
 
-      console.log(boardName, taskId, subtaskIndex, "Check");
-
       const boardIndex = state.findIndex((board) => board.name === boardName);
       if (boardIndex !== -1) {
         const columnIndex = state[boardIndex].columns.findIndex((column) =>

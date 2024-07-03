@@ -5,9 +5,11 @@ const RuButton = ({
   functionlity,
   children,
   customStyle,
+  disable,
 }: {
   functionlity?: () => void;
   children: ReactNode;
+  disable?: boolean;
   customStyle?: {
     backgroundColor?: {
       color: string;
@@ -18,6 +20,7 @@ const RuButton = ({
 }) => {
   return (
     <Button
+      disabled={disable}
       style={{
         background: customStyle?.backgroundColor?.color || "none",
         padding: customStyle?.padding || 0,

@@ -10,15 +10,25 @@ import RuButton from "./RuButton";
 export function Dropdown({
   setIsOpen,
   setTypeModal,
+  disable,
+  typeModal,
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setTypeModal: Dispatch<SetStateAction<string>>;
+  disable?: boolean;
+  typeModal: {
+    yes: string;
+    no: string;
+  };
 }) {
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger className="focus-visible:outline-none">
-          <RuButton>
+        <DropdownMenuTrigger
+          disabled={disable}
+          className="focus-visible:outline-none"
+        >
+          <RuButton disable={disable}>
             <img src="/assets/icon-vertical-ellipsis.svg" />
           </RuButton>
         </DropdownMenuTrigger>
@@ -26,7 +36,7 @@ export function Dropdown({
           <DropdownMenuItem
             onClick={() => {
               setIsOpen(true);
-              setTypeModal("edit");
+              setTypeModal(typeModal.yes);
             }}
             className="focus-visible:outline-none text-colorLightGrey"
           >
@@ -35,7 +45,7 @@ export function Dropdown({
           <DropdownMenuItem
             onClick={() => {
               setIsOpen(true);
-              setTypeModal("delete");
+              setTypeModal(typeModal.no);
             }}
             className="focus-visible:outline-none text-colorRed"
           >

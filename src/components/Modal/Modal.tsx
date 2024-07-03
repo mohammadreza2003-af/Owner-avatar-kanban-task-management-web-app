@@ -6,13 +6,7 @@ import {
 } from "../../components/ui/dialog";
 import { type ModalProps } from "../../constants/types";
 
-export function Modal({
-  isOpen,
-  onClose,
-  title,
-
-  children,
-}: ModalProps) {
+export function Modal({ isOpen, onClose, title, children }: ModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[480px] rounded-sm border-none bg-colorMediumGrey">

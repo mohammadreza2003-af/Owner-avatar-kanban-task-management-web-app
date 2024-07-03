@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectActiveBoard } from "../utils/selector";
 import Dropdown from "./DropDown";
 import { useEffect, useState } from "react";
-import { TypeBoard, TypeTask } from "../constants/types";
+import { StateType, TypeBoard, TypeTask } from "../constants/types";
 import { defaultBoard } from "../constants/defaultValue";
 import EditModal from "./Modal/EditModal";
 import { addTask, deleteBoard, editBoardAndSave } from "../redux/boardSlice";
@@ -20,10 +20,10 @@ const Navbar = () => {
     subtasks: [],
   };
   const activeBoard = useSelector(selectActiveBoard);
+  const boards = useSelector((state: StateType) => state.boards);
   const [editBoard, setEditBoard] = useState<TypeBoard>(defaultBoard);
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
   const [typeModal, setTypeModal] = useState<string>("");
-
   const [task, setTask] = useState<TypeTask>(defalutTask);
 
   useEffect(() => {
@@ -47,6 +47,7 @@ const Navbar = () => {
         </h2>
         <div className="flex items-center gap-x-6">
           <RuButton
+            disable={boards.length > 0 ? false : true}
             customStyle={{
               className: "rounded-full",
               padding: "12px 18px",
@@ -59,7 +60,15 @@ const Navbar = () => {
           >
             + Add New Task
           </RuButton>
-          <Dropdown setIsOpen={setDialogOpen} setTypeModal={setTypeModal} />
+          <Dropdown
+            typeModal={{
+              yes: "edit",
+              no: "delete",
+            }}
+            disable={boards.length > 0 ? false : true}
+            setIsOpen={setDialogOpen}
+            setTypeModal={setTypeModal}
+          />
         </div>
       </div>
       {isDialogOpen && typeModal === "edit" && (
@@ -78,6 +87,7 @@ const Navbar = () => {
       )}
       {isDialogOpen && typeModal === "delete" && (
         <DeleteModal
+          des={`Are you sure you want to delete the "Marketing Plan" board? This action will remove all columns and tasks and cannot be reversed.`}
           title={"Delete Board"}
           isOpen={isDialogOpen}
           setIsOpen={setDialogOpen}
@@ -96,7 +106,7 @@ const Navbar = () => {
           isOpen={isDialogOpen}
           setIsOpen={setDialogOpen}
           subTitle={"Save Chenges"}
-          submitFuntion={() => {
+          submitFunction={() => {
             dispatch(addTask(task));
             setDialogOpen(false);
           }}

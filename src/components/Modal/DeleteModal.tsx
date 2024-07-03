@@ -7,13 +7,11 @@ const DeleteModal = ({
   setIsOpen,
   title,
   onfunctionality,
+  des,
 }: DeleteModalProps) => {
   return (
     <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={title}>
-      <p className="text-colorLowGray mb-2">
-        Are you sure you want to delete the "Marketing Plan" board? This action
-        will remove all columns and tasks and cannot be reversed.
-      </p>
+      <p className="text-colorLowGray mb-2">{des}</p>
       <div className="flex w-full justify-between items-center">
         <RuButton
           customStyle={{

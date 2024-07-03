@@ -39,12 +39,18 @@ const EditModal = ({
     if (!name || name.trim() === "") {
       return "Required";
     }
+    if (name !== board.name && board.columns.some((col) => col.name === name)) {
+      return "Board name must be unique";
+    }
     return "";
   };
 
-  const validateColumnName = (name: string) => {
+  const validateColumnName = (name: string, index: number) => {
     if (!name || name.trim() === "") {
       return "Required";
+    }
+    if (board.columns.some((col, i) => col.name === name && i !== index)) {
+      return "Used";
     }
     return "";
   };
@@ -60,14 +66,14 @@ const EditModal = ({
   ) => {
     handleColumnNameChange(board, index, event, setBoard);
     const newErrors = [...errors.columns];
-    newErrors[index] = validateColumnName(event.target.value);
+    newErrors[index] = validateColumnName(event.target.value, index);
     setErrors((prev) => ({ ...prev, columns: newErrors }));
   };
 
   const handleFormSubmit = () => {
     const boardNameError = validateBoardName(board.name);
-    const columnErrors = board.columns.map((col) =>
-      validateColumnName(col.name)
+    const columnErrors = board.columns.map((col, index) =>
+      validateColumnName(col.name, index)
     );
 
     if (boardNameError || columnErrors.some((err) => err !== "")) {

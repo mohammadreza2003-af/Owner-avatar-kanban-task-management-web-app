@@ -9,6 +9,7 @@ import EditModal from "./Modal/EditModal";
 import EditTaskModal from "./Modal/EditTaskModal";
 import TaskModal from "./Modal/TaskModal";
 import RuButton from "./RuButton";
+import DeleteModal from "./Modal/DeleteModal";
 
 const Board = () => {
   const dispatch = useDispatch();
@@ -91,7 +92,7 @@ const Board = () => {
 
   return (
     <div className="w-full flex-1 bg-colorHighGrey py-4 px-4 overflow-x-scroll max-h-[87.5vh] ">
-      <div className="flex gap-x-8 w-full">
+      <div className="flex gap-x-8 w-full min-h-[540px]">
         {activeBoard?.columns.map((col, index) => (
           <Column
             setDialogOpen={setDialogOpen}
@@ -103,8 +104,8 @@ const Board = () => {
             setIndexes={setIndexes}
           />
         ))}
-        <div className="min-w-[280px]">
-          <p className="text-colorLowGray mb-4">Create Board</p>
+        <div className="min-w-[280px] min-h-[540px]">
+          <p className="text-colorLowGray mb-3">Create Board</p>
           <div
             onClick={() => {
               setTypeModal("edit");
@@ -139,7 +140,7 @@ const Board = () => {
           isOpen={isDialogOpen}
           setIsOpen={setDialogOpen}
           subTitle={"Save Chenges"}
-          submitFuntion={() => {
+          submitFunction={() => {
             dispatch(
               editTask({ task: task, boardName: editBoard.name, indexes })
             );
@@ -156,11 +157,23 @@ const Board = () => {
           isOpen={isDialogOpen}
           setIsOpen={setDialogOpen}
           subTitle={"Save Chenges"}
+          setTypeModal={setTypeModal}
           boardName={activeBoard?.name || ""}
-          submitFuntion={() => {
+          submitFunction={() => {
             dispatch(
               editTask({ task: task, boardName: editBoard.name, indexes })
             );
+            setDialogOpen(false);
+          }}
+        />
+      )}
+      {isDialogOpen && typeModal === "deleteTask" && (
+        <DeleteModal
+          des={`Are you sure you want to delete the task.`}
+          title={"Delete Task"}
+          isOpen={isDialogOpen}
+          setIsOpen={setDialogOpen}
+          onfunctionality={() => {
             setDialogOpen(false);
           }}
         />

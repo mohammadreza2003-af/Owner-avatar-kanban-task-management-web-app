@@ -13,6 +13,8 @@ import {
 } from "../ui/select";
 import { Checkbox } from "../ui/checkbox";
 import { toggleSubtaskCompletion } from "../../redux/boardSlice";
+import Dropdown from "../DropDown";
+import { Dispatch, SetStateAction } from "react";
 
 const TaskModal = ({
   isOpen,
@@ -22,9 +24,12 @@ const TaskModal = ({
   title,
   column,
   subTitle,
-  submitFuntion,
+  submitFunction,
   boardName,
-}: EditTaskModalProps & { boardName: string }) => {
+  setTypeModal,
+}: EditTaskModalProps & { boardName: string } & {
+  setTypeModal: Dispatch<SetStateAction<string>>;
+}) => {
   const dispatch = useDispatch();
 
   const numberOfComSubTask = task.subtasks.filter(
@@ -43,9 +48,20 @@ const TaskModal = ({
 
   return (
     <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={title}>
-      <h2 className="text-colorLightGrey font-semibold text-lg">
-        {task.title}
-      </h2>
+      <div className="flex justify-between items-center">
+        <h2 className="text-colorLightGrey font-semibold text-lg">
+          {task.title}
+        </h2>
+        <Dropdown
+          typeModal={{
+            yes: "editTask",
+            no: "deleteTask",
+          }}
+          disable={false}
+          setIsOpen={setIsOpen}
+          setTypeModal={setTypeModal}
+        />
+      </div>
       <p className="text-colorLowGray">
         {task.description.length > 0 ? task.description : "No description"}
       </p>
@@ -116,7 +132,7 @@ const TaskModal = ({
           className: "text-colorLightGrey rounded-full font-semibold",
           backgroundColor: { color: "rgb(100, 96, 199)" },
         }}
-        functionlity={() => submitFuntion()}
+        functionlity={() => submitFunction()}
       >
         {subTitle}
       </RuButton>

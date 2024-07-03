@@ -47,7 +47,7 @@ export type EditTaskModalProps = {
   subTitle: string;
   task: TypeTask;
   column: TypeColumn[];
-  submitFuntion: () => void;
+  submitFunction: () => void;
 };
 export type AddTaskModalProps = {
   isOpen: boolean;
@@ -57,13 +57,14 @@ export type AddTaskModalProps = {
   subTitle: string;
   task: TypeTask;
   column: TypeColumn[];
-  submitFuntion: () => void;
+  submitFunction: () => void;
 };
 export type DeleteModalProps = {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   title: string;
   onfunctionality: () => void;
+  des: string;
 };
 
 export type ErrorStateEditModal = { name: string; columns: string[] };

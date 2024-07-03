@@ -1,3 +1,4 @@
+import React from "react";
 import { EditTaskModalProps } from "../../constants/types";
 import RuButton from "../RuButton";
 import { Input } from "../ui/input";
@@ -22,26 +23,74 @@ const EditTaskModal = ({
   title,
   column,
   subTitle,
-  submitFuntion,
+  submitFunction,
 }: EditTaskModalProps) => {
+  const handleTaskTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newTitle = e.target.value;
+    if (!isTitleUnique(newTitle)) {
+      return;
+    }
+    setTask((prevTask) => ({
+      ...prevTask,
+      title: newTitle,
+    }));
+  };
+
+  const isTitleUnique = (newTitle: string) => {
+    return (
+      task.title !== newTitle &&
+      !column.some((col) => col.tasks.some((t) => t.title === newTitle))
+    );
+  };
+
+  const handleSubtaskTitleChange = (index: number, newTitle: string) => {
+    if (!isSubtaskTitleUnique(index, newTitle)) {
+      return;
+    }
+    const updatedSubtasks = task.subtasks.map((subtask, i) =>
+      i === index ? { ...subtask, title: newTitle } : subtask
+    );
+    setTask((prevTask) => ({
+      ...prevTask,
+      subtasks: updatedSubtasks,
+    }));
+  };
+
+  const isSubtaskTitleUnique = (index: number, newTitle: string) => {
+    return !task.subtasks.some(
+      (subtask, i) => i !== index && subtask.title === newTitle
+    );
+  };
+
+  const handleAddSubtask = () => {
+    setTask((prevTask) => ({
+      ...prevTask,
+      subtasks: [...prevTask.subtasks, { title: "", isCompleted: false }],
+    }));
+  };
+
+  const handleRemoveSubtask = (index: number) => {
+    const updatedSubtasks = task.subtasks.filter((_, i) => i !== index);
+    setTask((prevTask) => ({
+      ...prevTask,
+      subtasks: updatedSubtasks,
+    }));
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={title}>
-      <Label htmlFor="boardName" className="text-colorLightGrey font-semibold">
+      <Label htmlFor="taskTitle" className="text-colorLightGrey font-semibold">
         Title
       </Label>
       <Input
         type="text"
-        value={task?.title}
-        onChange={(e) =>
-          setTask((prevState) => ({
-            ...prevState,
-            title: e.target.value,
-          }))
-        }
-        id="boardName"
-        placeholder="e.g. Web Design"
+        id="taskTitle"
+        value={task.title}
+        onChange={handleTaskTitleChange}
+        placeholder="Enter task title"
         className="bg-inherit rounded-md border-colorLowGray border text-colorLightGrey"
       />
+
       <div className="grid w-full gap-1.5">
         <Label
           htmlFor="description"
@@ -50,105 +99,79 @@ const EditTaskModal = ({
           Description
         </Label>
         <Textarea
-          placeholder="Type your message here."
+          placeholder="Type your description here."
           id="description"
+          value={task.description}
           onChange={(e) =>
-            setTask((prevState) => ({
-              ...prevState,
+            setTask((prevTask) => ({
+              ...prevTask,
               description: e.target.value,
             }))
           }
-          value={task.description}
           className="bg-inherit rounded-md border-colorLowGray border text-colorLightGrey"
         />
       </div>
-      <Label htmlFor="Subtasks" className="text-colorLightGrey font-semibold">
+
+      <Label htmlFor="subtasks" className="text-colorLightGrey font-semibold">
         Subtasks
       </Label>
-      {task.subtasks.map((sub) => {
-        return (
-          <div className="flex items-center justify-between w-full gap-4 text-colorLightGrey">
-            <Input
-              type="text"
-              id="Subtasks"
-              value={sub.title}
-              onChange={(event) => {
-                const updataTask = task.subtasks.map((col) => {
-                  if (col.title === sub.title) {
-                    return {
-                      ...col,
-                      title: event.target.value,
-                    };
-                  }
-                  return col;
-                });
-                setTask((prevState) => ({
-                  ...prevState,
-                  subtasks: updataTask,
-                }));
-              }}
-              className="bg-inherit rounded-md border-colorLowGray border"
-            />
-            <RuButton
-              functionlity={() => {
-                const updataTask = task.subtasks.filter(
-                  (col) => col.title !== sub.title
-                );
-                setTask((prevState) => ({
-                  ...prevState,
-                  subtasks: updataTask,
-                }));
-              }}
-            >
-              <img src="/assets/icon-cross.svg" />
-            </RuButton>
-          </div>
-        );
-      })}
+      {task.subtasks.map((subtask, index) => (
+        <div
+          key={index}
+          className="flex items-center justify-between w-full gap-4 text-colorLightGrey"
+        >
+          <Input
+            type="text"
+            id={`subtask-${index}`}
+            value={subtask.title}
+            onChange={(e) => handleSubtaskTitleChange(index, e.target.value)}
+            placeholder="Enter subtask title"
+            className="bg-inherit rounded-md border-colorLowGray border"
+          />
+          <RuButton functionlity={() => handleRemoveSubtask(index)}>
+            <img src="/assets/icon-cross.svg" alt="Delete subtask" />
+          </RuButton>
+        </div>
+      ))}
+
       <RuButton
         customStyle={{
           className: "text-colorMainPurple rounded-full font-semibold",
           backgroundColor: { color: "rgb(244, 247, 253)" },
         }}
-        functionlity={() => {
-          const updateTask = [...task.subtasks];
-          updateTask.push({
-            title: "",
-            isCompleted: false,
-          });
-          setTask((prevState) => ({ ...prevState, subtasks: updateTask }));
-        }}
+        functionlity={handleAddSubtask}
       >
         + Add New Subtask
       </RuButton>
+
       <Label className="text-colorLightGrey font-semibold">Status</Label>
       <Select
         onValueChange={(value) =>
-          setTask((prevState) => ({
-            ...prevState,
-            status: value,
-          }))
+          setTask((prevTask) => ({ ...prevTask, status: value }))
         }
         defaultValue={task.status}
       >
         <SelectTrigger className="w-full bg-colorMediumGrey text-colorLightGrey">
-          <SelectValue placeholder="Select a fruit" />
+          <SelectValue placeholder="Select a status" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectLabel>State</SelectLabel>
+            <SelectLabel>Status</SelectLabel>
             {column.map((col) => (
-              <SelectItem value={col.name}>{col.name}</SelectItem>
+              <SelectItem key={col.id} value={col.name}>
+                {col.name}
+              </SelectItem>
             ))}
           </SelectGroup>
         </SelectContent>
       </Select>
+
       <RuButton
         customStyle={{
           className: "text-colorLightGrey rounded-full font-semibold",
           backgroundColor: { color: "rgb(100, 96, 199)" },
         }}
-        functionlity={() => submitFuntion()}
+        functionlity={submitFunction}
       >
         {subTitle}
       </RuButton>
