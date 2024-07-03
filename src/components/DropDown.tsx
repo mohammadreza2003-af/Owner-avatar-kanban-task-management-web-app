@@ -29,11 +29,7 @@ export function Dropdown({
           className="focus-visible:outline-none"
         >
           <RuButton disable={disable}>
-            <img
-              width={8}
-              height={8}
-              src="/assets/icon-vertical-ellipsis.svg"
-            />
+            <img src="/assets/icon-vertical-ellipsis.svg" />
           </RuButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-[100px] rounded-sm border-none bg-colorHighGrey  mt-4 mr-8">

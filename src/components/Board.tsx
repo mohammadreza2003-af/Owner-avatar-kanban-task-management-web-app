@@ -56,7 +56,7 @@ const Board = () => {
     return (
       <>
         <div className="w-full flex flex-col space-y-4 bg-colorHighGrey py-4 px-4 items-center justify-center overflow-x-scroll max-h-[87.5vh] ">
-          <h2 className="font-semibold text-colorLightWhite text-xl">
+          <h2 className="font-semibold text-colorLightWhite text-xl text-center">
             This board is empty. Create a new column to get started.
           </h2>
           <RuButton
