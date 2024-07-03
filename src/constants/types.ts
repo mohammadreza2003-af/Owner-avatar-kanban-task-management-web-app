@@ -28,6 +28,7 @@ export type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
   title: string;
+  position?: string;
   children: ReactNode;
 };
 export type EditModalProps = {
@@ -67,6 +68,13 @@ export type DeleteModalProps = {
   onfunctionality: () => void;
   des: string;
 };
+
+export type NavModalProps = {
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  title: string;
+};
+
 
 export type ErrorStateEditModal = { name: string; columns: string[] };
 

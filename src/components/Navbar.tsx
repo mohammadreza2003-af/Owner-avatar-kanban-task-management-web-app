@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { selectActiveBoard } from "../utils/selector";
+import { useMedia } from "react-use";
 import Dropdown from "./DropDown";
 import { useEffect, useState } from "react";
 import { StateType, TypeBoard, TypeTask } from "../constants/types";
@@ -9,6 +10,7 @@ import { addTask, deleteBoard, editBoardAndSave } from "../redux/boardSlice";
 import DeleteModal from "./Modal/DeleteModal";
 import RuButton from "./RuButton";
 import AddTaskModal from "./Modal/AddTaskModal";
+import NavModal from "./Modal/NavModal";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -24,6 +26,7 @@ const Navbar = () => {
   const [editBoard, setEditBoard] = useState<TypeBoard>(defaultBoard);
   const [isDialogOpen, setDialogOpen] = useState<boolean>(false);
   const [typeModal, setTypeModal] = useState<string>("");
+  const [isNav, setIsNav] = useState<boolean>(false);
   const [task, setTask] = useState<TypeTask>(defalutTask);
 
   useEffect(() => {
@@ -35,6 +38,110 @@ const Navbar = () => {
       setTask(defalutTask);
     }
   }, [activeBoard, isDialogOpen]);
+
+  const isMobile = useMedia("(max-width : 768px)");
+
+  if (isMobile) {
+    return (
+      <nav className="flex items-center justify-between w-full px-4">
+        <div className="flex items-center justify-center gap-x-6">
+          <img src="/assets/logo-mobile.svg" />
+          <div className="flex items-center gap-x-2">
+            <h2 className="text-2xl text-colorLightGrey font-bold">
+              {activeBoard?.name}
+            </h2>
+            <RuButton
+              functionlity={() => {
+                setIsNav(!isNav);
+              }}
+            >
+              <img
+                src={
+                  isNav
+                    ? "/assets/icon-chevron-up.svg"
+                    : "/assets/icon-chevron-down.svg"
+                }
+              />
+            </RuButton>
+          </div>
+        </div>
+        <div className="flex justify-between items-center md:px-6 px-4 md:py-8 py-8">
+          <div className="flex items-center gap-x-6">
+            <RuButton
+              disable={boards.length > 0 ? false : true}
+              customStyle={{
+                className:
+                  "rounded-full flex justify-center w-12 h-8 items-center ",
+                backgroundColor: { color: "rgb(100, 96, 199)" },
+              }}
+              functionlity={() => {
+                setDialogOpen(true);
+                setTypeModal("addTask");
+              }}
+            >
+              +
+            </RuButton>
+            <Dropdown
+              typeModal={{
+                yes: "edit",
+                no: "delete",
+              }}
+              disable={boards.length > 0 ? false : true}
+              setIsOpen={setDialogOpen}
+              setTypeModal={setTypeModal}
+            />
+          </div>
+        </div>
+        {isNav && (
+          <NavModal setIsOpen={setIsNav} isOpen={isNav} title="Board" />
+        )}
+        {isDialogOpen && typeModal === "edit" && (
+          <EditModal
+            type="editBoard"
+            title={"Edit Board"}
+            board={editBoard}
+            setBoard={setEditBoard}
+            isOpen={isDialogOpen}
+            setIsOpen={setDialogOpen}
+            subTitle={"Save Chenges"}
+            submitFuntion={() => {
+              dispatch(editBoardAndSave(editBoard));
+              setDialogOpen(false);
+            }}
+          />
+        )}
+        {isDialogOpen && typeModal === "delete" && (
+          <DeleteModal
+            des={`Are you sure you want to delete the "Marketing Plan" board? This action will remove all columns and tasks and cannot be reversed.`}
+            title={"Delete Board"}
+            isOpen={isDialogOpen}
+            setIsOpen={setDialogOpen}
+            onfunctionality={() => {
+              dispatch(deleteBoard(activeBoard?.name));
+              setDialogOpen(false);
+            }}
+          />
+        )}
+        {typeModal === "addTask" && isDialogOpen && (
+          <AddTaskModal
+            title={"Edit Task"}
+            task={task}
+            setTask={setTask}
+            column={editBoard.columns}
+            isOpen={isDialogOpen}
+            setIsOpen={setDialogOpen}
+            subTitle={"Save Chenges"}
+            submitFunction={() => {
+              dispatch(addTask(task));
+              setDialogOpen(false);
+            }}
+          />
+        )}
+      </nav>
+    );
+  }
+
+  console.log(isMobile, "isMobile");
 
   return (
     <nav className="flex items-center w-full">

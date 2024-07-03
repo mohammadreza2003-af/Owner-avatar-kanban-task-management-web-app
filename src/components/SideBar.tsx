@@ -4,6 +4,7 @@ import { addBoard, setBoard } from "../redux/boardSlice";
 import { useState } from "react";
 import EditModal from "./Modal/EditModal";
 import { defaultBoard } from "../constants/defaultValue";
+import { useMedia } from "react-use";
 
 const SideBar = () => {
   const dispatch = useDispatch();
@@ -13,8 +14,16 @@ const SideBar = () => {
     return state.boards;
   });
 
+  const isMobile = useMedia("(max-width : 768px)");
+
   return (
-    <div className="w-[260px] flex-shrink-0 col-span-4  bg-colorMediumGrey py-4 min-h-[87.5vh] border-r border-r-slate-600">
+    <div
+      className={`${
+        !isMobile
+          ? "w-[260px]  border-r border-r-slate-600 col-span-4 py-4 min-h-[87.5vh]"
+          : "w-full"
+      } flex-shrink-0 bg-colorMediumGrey`}
+    >
       <p className="font-semibold text-[16px] text-colorLowGray ml-4 uppercase">
         All board ({borads.length})
       </p>
