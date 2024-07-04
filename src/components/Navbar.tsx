@@ -11,9 +11,11 @@ import DeleteModal from "./Modal/DeleteModal";
 import RuButton from "./RuButton";
 import AddTaskModal from "./Modal/AddTaskModal";
 import NavModal from "./Modal/NavModal";
+import { useCustomToast } from "./Toast";
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  const { showToast } = useCustomToast();
 
   const defalutTask = {
     title: "",
@@ -105,18 +107,20 @@ const Navbar = () => {
             submitFuntion={() => {
               dispatch(editBoardAndSave(editBoard));
               setDialogOpen(false);
+              showToast("Successfuly", "The board edited");
             }}
           />
         )}
         {isDialogOpen && typeModal === "delete" && (
           <DeleteModal
-            des={`Are you sure you want to delete the "Marketing Plan" board? This action will remove all columns and tasks and cannot be reversed.`}
+            des={`Are you sure you want to delete the board?`}
             title={"Delete Board"}
             isOpen={isDialogOpen}
             setIsOpen={setDialogOpen}
             onfunctionality={() => {
               dispatch(deleteBoard(activeBoard?.name));
               setDialogOpen(false);
+              showToast("Successfuly", "The board deleted");
             }}
           />
         )}
@@ -132,6 +136,7 @@ const Navbar = () => {
             submitFunction={() => {
               dispatch(addTask(task));
               setDialogOpen(false);
+              showToast("Successfuly", "The task edited");
             }}
           />
         )}
@@ -188,18 +193,20 @@ const Navbar = () => {
           submitFuntion={() => {
             dispatch(editBoardAndSave(editBoard));
             setDialogOpen(false);
+            showToast("Successfuly", "The board edited");
           }}
         />
       )}
       {isDialogOpen && typeModal === "delete" && (
         <DeleteModal
-          des={`Are you sure you want to delete the "Marketing Plan" board? This action will remove all columns and tasks and cannot be reversed.`}
+          des={`Are you sure you want to delete the board?`}
           title={"Delete Board"}
           isOpen={isDialogOpen}
           setIsOpen={setDialogOpen}
           onfunctionality={() => {
             dispatch(deleteBoard(activeBoard?.name));
             setDialogOpen(false);
+            showToast("Successfuly", "The board deleted");
           }}
         />
       )}
@@ -215,6 +222,7 @@ const Navbar = () => {
           submitFunction={() => {
             dispatch(addTask(task));
             setDialogOpen(false);
+            showToast("Successfuly", "The task added");
           }}
         />
       )}

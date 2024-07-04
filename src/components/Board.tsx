@@ -3,16 +3,23 @@ import Column from "./Column";
 import { selectActiveBoard } from "../utils/selector";
 import { useEffect, useState } from "react";
 import { StateType, TypeBoard, TypeTask } from "../constants/types";
-import { addBoard, editBoardAndSave, editTask } from "../redux/boardSlice";
+import {
+  addBoard,
+  deleteTask,
+  editBoardAndSave,
+  editTask,
+} from "../redux/boardSlice";
 import { defaultBoard } from "../constants/defaultValue";
 import EditModal from "./Modal/EditModal";
 import EditTaskModal from "./Modal/EditTaskModal";
 import TaskModal from "./Modal/TaskModal";
 import RuButton from "./RuButton";
 import DeleteModal from "./Modal/DeleteModal";
+import { useCustomToast } from "./Toast";
 
 const Board = () => {
   const dispatch = useDispatch();
+  const { showToast } = useCustomToast();
   const activeBoard = useSelector(selectActiveBoard);
   const [newBoard, setNewBoard] = useState<TypeBoard>(defaultBoard);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -40,6 +47,7 @@ const Board = () => {
       },
     ],
   });
+
   useEffect(() => {
     if (activeBoard) {
       setEditBoard(activeBoard);
@@ -55,7 +63,7 @@ const Board = () => {
   if (boards.length === 0) {
     return (
       <>
-        <div className="w-full flex flex-col space-y-4 bg-colorHighGrey py-4 px-4 items-center justify-center overflow-x-scroll max-h-[87.5vh] ">
+        <div className="w-full flex flex-col space-y-4 bg-colorHighGrey py-4 px-4 items-center justify-center overflow-x-scroll min-h-[87.5vh] ">
           <h2 className="font-semibold text-colorLightWhite text-xl text-center">
             This board is empty. Create a new column to get started.
           </h2>
@@ -67,13 +75,13 @@ const Board = () => {
             }}
             functionlity={() => {
               setDialogOpen(true);
-              setTypeModal("addTask");
+              setTypeModal("addBoard");
             }}
           >
             + Create New Board
           </RuButton>
         </div>
-        {isDialogOpen && typeModal === "addTask" && (
+        {isDialogOpen && typeModal === "addBoard" && (
           <EditModal
             title={"Add new board"}
             board={newBoard}
@@ -85,6 +93,7 @@ const Board = () => {
               dispatch(addBoard(newBoard));
               setDialogOpen(false);
               setNewBoard(defaultBoard);
+              showToast("Successfuly", "The board added");
             }}
           />
         )}
@@ -93,7 +102,7 @@ const Board = () => {
   }
 
   return (
-    <div className="w-full flex-1 bg-colorHighGrey py-4 px-4 overflow-x-scroll max-h-[87.5vh] ">
+    <div className="w-full flex-1 bg-colorHighGrey py-4 px-4 overflow-x-scroll min-h-[87.5vh] ">
       <div className="flex gap-x-8 w-full min-h-[540px]">
         {activeBoard?.columns.map((col, index) => (
           <Column
@@ -106,7 +115,7 @@ const Board = () => {
             setIndexes={setIndexes}
           />
         ))}
-        {activeBoard && activeBoard?.columns.length <= 6 && (
+        {activeBoard && activeBoard?.columns.length < 6 && (
           <div className="min-w-[280px] min-h-[540px]">
             <p className="text-colorLowGray mb-3">Create Board</p>
             <div
@@ -133,6 +142,7 @@ const Board = () => {
           submitFuntion={() => {
             dispatch(editBoardAndSave(editBoard));
             setDialogOpen(false);
+            showToast("Successfuly", "The board edited");
           }}
         />
       )}
@@ -150,6 +160,7 @@ const Board = () => {
               editTask({ task: task, boardName: editBoard.name, indexes })
             );
             setDialogOpen(false);
+            showToast("Successfuly", "The task edited");
           }}
         />
       )}
@@ -169,6 +180,7 @@ const Board = () => {
               editTask({ task: task, boardName: editBoard.name, indexes })
             );
             setDialogOpen(false);
+            showToast("Successfuly", "The task edited");
           }}
         />
       )}
@@ -179,7 +191,14 @@ const Board = () => {
           isOpen={isDialogOpen}
           setIsOpen={setDialogOpen}
           onfunctionality={() => {
+            dispatch(
+              deleteTask({
+                task: task,
+                boardName: editBoard.name,
+              })
+            );
             setDialogOpen(false);
+            showToast("Successfuly", "The task deleted");
           }}
         />
       )}

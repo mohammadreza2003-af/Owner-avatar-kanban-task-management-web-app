@@ -220,7 +220,7 @@ const AddTaskModal = ({
         <SelectTrigger className="w-full bg-colorMediumGrey text-colorLightGrey">
           <SelectValue placeholder="Select a status" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-colorMediumGrey text-colorLightGrey">
           <SelectGroup>
             <SelectLabel>Status</SelectLabel>
             {column.map((col) => (

@@ -123,6 +123,24 @@ const boards = createSlice({
         }
       }
     },
+    deleteTask: (
+      state,
+      action: PayloadAction<{ task: TypeTask; boardName: string }>
+    ) => {
+      const { task, boardName } = action.payload;
+      const { title, status } = task;
+      const boardIndex = state.findIndex((board) => board.name === boardName);
+      if (boardIndex === -1) return;
+      const colIndex = state[boardIndex].columns.findIndex(
+        (col) => col.name === status
+      );
+      if (colIndex === -1) return;
+      const taskIndex = state[boardIndex].columns[colIndex].tasks.findIndex(
+        (t) => t.title === title
+      );
+      if (taskIndex === -1) return;
+      state[boardIndex].columns[colIndex].tasks.splice(taskIndex, 1);
+    },
   },
 });
 
@@ -137,6 +155,7 @@ export const {
   deleteBoard,
   editTask,
   addTask,
+  deleteTask,
   toggleSubtaskCompletion,
 } = boards.actions;
 export default boards;

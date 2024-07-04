@@ -62,7 +62,7 @@ const TaskModal = ({
           setTypeModal={setTypeModal}
         />
       </div>
-      <p className="text-colorLowGray w-[20%]">
+      <p className="text-colorLowGray">
         {task.description.length > 0 ? task.description : "No description"}
       </p>
       <span className="text-colorLightGrey font-semibold text-sm">

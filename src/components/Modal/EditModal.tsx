@@ -122,7 +122,6 @@ const EditModal = ({
         className="bg-inherit rounded-md border-colorLowGray border text-colorLightGrey"
       />
       {errors.name && <p className="text-red-500">{errors.name}</p>}
-
       <Label htmlFor="ColumnName" className="text-colorLightGrey font-semibold">
         Board Columns
       </Label>
@@ -149,15 +148,18 @@ const EditModal = ({
           )}
         </div>
       ))}
-      <RuButton
-        customStyle={{
-          className: "text-colorMainPurple rounded-full font-semibold",
-          backgroundColor: { color: "rgb(244, 247, 253)" },
-        }}
-        functionlity={() => handleAddColumn(board, setBoard)}
-      >
-        + Add New Column
-      </RuButton>
+      E
+      {board.columns.length < 6 && (
+        <RuButton
+          customStyle={{
+            className: "text-colorMainPurple rounded-full font-semibold",
+            backgroundColor: { color: "rgb(244, 247, 253)" },
+          }}
+          functionlity={() => handleAddColumn(board, setBoard)}
+        >
+          + Add New Column
+        </RuButton>
+      )}
       <RuButton
         customStyle={{
           className: "text-colorLightGrey rounded-full font-semibold",
