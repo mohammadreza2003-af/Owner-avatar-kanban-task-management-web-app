@@ -1,30 +1,44 @@
 import { useMedia } from "react-use";
 import Board from "../components/Board";
 import SideBar from "../components/SideBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Container = () => {
   const isMobile = useMedia("(max-width : 768px)");
+
   const [isSideBar, setIsSideBar] = useState(true);
-  let check;
-  if (isMobile === false && isSideBar === false) {
-    check = false;
-  }
-  if (isMobile === false && isSideBar === true) {
-    check = true;
-  }
+  const [check, setCheck] = useState(false);
+
+  useEffect(() => {
+    if (isMobile === false && isSideBar === false) {
+      setCheck(false);
+    }
+    if (isMobile === false && isSideBar === true) {
+      setCheck(true);
+    }
+  }, [isMobile, isSideBar]);
+
   return (
     <div className="flex w-full min-h-[87.4vh]">
-      {check && <SideBar setIsSideBar={setIsSideBar} />}
-      {check === false && (
+      <div
+        className={`${
+          check ? "sidebar-show " : "sidebar-hide"
+        } flex flex-shrink-0 absolute`}
+      >
+        <SideBar setIsSideBar={setIsSideBar} />
+      </div>
+      {!isMobile && (
         <button
           onClick={() => setIsSideBar(true)}
-          className="fixed bottom-[70px] py-[18px] bg-colorMainPurple text-colorLightGrey px-4 w-[78px] rounded-r-[28px] flex items-center font-semibold hover:text-colorMainPurple transition-all duration-300 ease-in-out"
+          className={`fixed ${
+            check ? "sidebar-hide" : "sidebar-show"
+          } bottom-[72px] py-[18px] bg-colorMainPurple text-colorLightGrey px-4 w-[78px] rounded-r-[28px] flex items-center font-semibold hover:text-colorMainPurple transition-all duration-300 ease-in-out`}
         >
           <img width={24} src="/assets/icon-show-sidebar.svg" />
         </button>
       )}
-      <Board />
+
+      <Board check={check} />
     </div>
   );
 };

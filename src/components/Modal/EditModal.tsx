@@ -148,7 +148,6 @@ const EditModal = ({
           )}
         </div>
       ))}
-      E
       {board.columns.length < 6 && (
         <RuButton
           customStyle={{

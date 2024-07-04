@@ -33,7 +33,7 @@ const SideBar = ({
         All board ({borads.length})
       </p>
       <div className="flex flex-col justify-between items-start h-[80%] mt-8 w-full">
-        <div className="flex flex-col items-start mt-8 w-full">
+        <div className="flex flex-col items-start mt-8 w-full mb-8">
           {borads.map((board, index) => (
             <button
               key={index}

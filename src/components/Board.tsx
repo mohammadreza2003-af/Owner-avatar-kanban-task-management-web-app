@@ -17,7 +17,7 @@ import RuButton from "./RuButton";
 import DeleteModal from "./Modal/DeleteModal";
 import { useCustomToast } from "./Toast";
 
-const Board = () => {
+const Board = ({ check }: { check: boolean }) => {
   const dispatch = useDispatch();
   const { showToast } = useCustomToast();
   const activeBoard = useSelector(selectActiveBoard);
@@ -59,6 +59,12 @@ const Board = () => {
       setEditBoard(activeBoard);
     }
   }, [activeBoard, isDialogOpen]);
+
+  const [isVis, setIsVis] = useState(false);
+  useEffect(() => {
+    setIsVis(check);
+  }, [check]);
+  console.log(check, "check");
 
   if (boards.length === 0) {
     return (
@@ -102,7 +108,11 @@ const Board = () => {
   }
 
   return (
-    <div className="w-full flex-1 bg-colorHighGrey py-4 px-4 overflow-x-scroll min-h-[87.5vh] ">
+    <div
+      className={`w-full flex-1 ${
+        isVis ? "padding-show" : "padding-hide"
+      } bg-colorHighGrey py-4 pr-4 overflow-x-scroll min-h-[87.5vh]`}
+    >
       <div className="flex gap-x-8 w-full min-h-[540px]">
         {activeBoard?.columns.map((col, index) => (
           <Column
