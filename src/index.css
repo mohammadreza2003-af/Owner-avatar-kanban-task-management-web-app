@@ -3,6 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @keyframes hide-sidebar {
     0% {
         transform: translateX(0%);

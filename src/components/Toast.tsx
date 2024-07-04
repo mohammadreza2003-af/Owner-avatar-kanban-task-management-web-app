@@ -10,6 +10,7 @@ export const useCustomToast = () => {
         color: "rgb(244, 247, 253)",
         padding: "16px",
         borderRadius: "8px",
+
       },
       title: title,
       description: description,
