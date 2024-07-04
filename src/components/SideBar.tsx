@@ -10,7 +10,7 @@ import { useCustomToast } from "./Toast";
 const SideBar = ({
   setIsSideBar,
 }: {
-  setIsSideBar: Dispatch<SetStateAction<boolean>>;
+  setIsSideBar?: Dispatch<SetStateAction<boolean>>;
 }) => {
   const dispatch = useDispatch();
   const [newBoard, setNewBoard] = useState<TypeBoard>(defaultBoard);
@@ -71,7 +71,7 @@ const SideBar = ({
 
         {!isMobile && (
           <button
-            onClick={() => setIsSideBar(false)}
+            onClick={() => setIsSideBar && setIsSideBar(false)}
             className="bg-colorMainPurple text-colorLightGrey px-4 w-[30%] rounded-r-[28px] py-4 flex items-center font-semibold hover:text-colorMainPurple transition-all duration-300 ease-in-out"
           >
             <img width={24} src="/assets/icon-hide-sidebar.svg" />
