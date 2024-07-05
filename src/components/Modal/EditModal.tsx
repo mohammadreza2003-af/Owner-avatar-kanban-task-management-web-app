@@ -48,63 +48,84 @@ const EditModal = ({
     }
   }, [isOpen]);
 
-  const validateBoardName = (name: string) => {
-    const isDuplicate = boards.some(
-      (board) => board.name.toLowerCase() === name.toLowerCase()
-    );
-    if (!name || name.trim() === "") {
-      return "Required";
+
+useEffect(() => {
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "Enter") {
+      handleFormSubmit();
     }
-    if (type === "editBoard" && isDuplicate && name !== activeBoard?.name) {
-      return "Used";
-    }
-    if (type === "addNewBoard" && isDuplicate) {
-      return "Used";
-    }
-    return "";
   };
 
-  const validateColumnName = (name: string, index: number) => {
-    if (!name || name.trim() === "") {
-      return "Required";
-    }
-    if (
-      board.columns.some(
-        (col, i) => col.name.toLowerCase() === name.toLowerCase() && i !== index
-      )
-    ) {
-      return "Used";
-    }
-    return "";
-  };
+  if (isOpen) {
+    window.addEventListener("keydown", handleKeyDown);
+  } else {
+    window.removeEventListener("keydown", handleKeyDown);
+  }
 
-  const handleBoardNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleChangeBoardName(e, setBoard);
-    setErrors((prev) => ({ ...prev, name: validateBoardName(e.target.value) }));
+  return () => {
+    window.removeEventListener("keydown", handleKeyDown);
   };
+}, [isOpen, board]);
 
-  const handleColumnNameChangeWrapper = (
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    handleColumnNameChange(board, index, event, setBoard);
-    const newErrors = [...errors.columns];
-    newErrors[index] = validateColumnName(event.target.value, index);
-    setErrors((prev) => ({ ...prev, columns: newErrors }));
-  };
+const validateBoardName = (name: string) => {
+  const isDuplicate = boards.some(
+    (board) => board.name.toLowerCase() === name.toLowerCase()
+  );
+  if (!name || name.trim() === "") {
+    return "Required";
+  }
+  if (type === "editBoard" && isDuplicate && name !== activeBoard?.name) {
+    return "Used";
+  }
+  if (type === "addNewBoard" && isDuplicate) {
+    return "Used";
+  }
+  return "";
+};
 
-  const handleFormSubmit = () => {
-    const boardNameError = validateBoardName(board.name);
-    const columnErrors = board.columns.map((col, index) =>
-      validateColumnName(col.name, index)
-    );
+const validateColumnName = (name: string, index: number) => {
+  if (!name || name.trim() === "") {
+    return "Required";
+  }
+  if (
+    board.columns.some(
+      (col, i) => col.name.toLowerCase() === name.toLowerCase() && i !== index
+    )
+  ) {
+    return "Used";
+  }
+  return "";
+};
 
-    if (boardNameError || columnErrors.some((err) => err !== "")) {
-      setErrors({ name: boardNameError, columns: columnErrors });
-    } else {
-      submitFuntion();
-    }
-  };
+const handleBoardNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  handleChangeBoardName(e, setBoard);
+  setErrors((prev) => ({ ...prev, name: validateBoardName(e.target.value) }));
+};
+
+const handleColumnNameChangeWrapper = (
+  index: number,
+  event: React.ChangeEvent<HTMLInputElement>
+) => {
+  handleColumnNameChange(board, index, event, setBoard);
+  const newErrors = [...errors.columns];
+  newErrors[index] = validateColumnName(event.target.value, index);
+  setErrors((prev) => ({ ...prev, columns: newErrors }));
+};
+
+const handleFormSubmit = () => {
+  const boardNameError = validateBoardName(board.name);
+  const columnErrors = board.columns.map((col, index) =>
+    validateColumnName(col.name, index)
+  );
+  if (boardNameError || columnErrors.some((err) => err !== "")) {
+    setErrors({ name: boardNameError, columns: columnErrors });
+  } else {
+    submitFuntion();
+  }
+};
+
+
+  
 
   return (
     <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={title}>

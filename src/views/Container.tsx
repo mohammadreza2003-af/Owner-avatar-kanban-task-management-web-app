@@ -19,11 +19,11 @@ const Container = () => {
   }, [isMobile, isSideBar]);
 
   return (
-    <div className="flex w-full min-h-[87.4vh]">
+    <div className="flex w-full min-h-[87.5vh]">
       <div
-        className={`${
-          check ? "sidebar-show " : "sidebar-hide"
-        } flex flex-shrink-0 absolute`}
+        className={`${check ? "sidebar-show" : "sidebar-hide"} ${
+          isMobile ? "hidden" : "flex"
+        }  flex-shrink-0 absolute`}
       >
         <SideBar setIsSideBar={setIsSideBar} />
       </div>
@@ -44,3 +44,4 @@ const Container = () => {
 };
 
 export default Container;
+ 

@@ -16,6 +16,7 @@ import TaskModal from "./Modal/TaskModal";
 import RuButton from "./RuButton";
 import DeleteModal from "./Modal/DeleteModal";
 import { useCustomToast } from "./Toast";
+import { useMedia } from "react-use";
 
 const Board = ({ check }: { check: boolean }) => {
   const dispatch = useDispatch();
@@ -32,8 +33,7 @@ const Board = ({ check }: { check: boolean }) => {
     taskIndex: 0,
     colIndex: 0,
   });
-
-  console.log(boards);
+  const isMobile = useMedia("(max-width : 768px)");
 
   const [typeModal, setTypeModal] = useState<string>("");
   const [task, setTask] = useState<TypeTask>({
@@ -69,7 +69,11 @@ const Board = ({ check }: { check: boolean }) => {
   if (boards.length === 0) {
     return (
       <>
-        <div className="w-full flex flex-col space-y-4 bg-colorHighGrey py-4 px-4 items-center justify-center overflow-x-scroll min-h-[87.5vh] ">
+        <div
+          className={`w-full flex flex-col space-y-4 bg-colorHighGrey py-4 px-4 items-center justify-center overflow-x-scroll min-h-[87.5vh] ${
+            isVis && !isMobile ? "padding-show" : "padding-hide"
+          }`}
+        >
           <h2 className="font-semibold text-colorLightWhite text-xl text-center">
             This board is empty. Create a new column to get started.
           </h2>

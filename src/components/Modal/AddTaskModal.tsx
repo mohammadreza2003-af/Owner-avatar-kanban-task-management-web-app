@@ -41,8 +41,23 @@ const AddTaskModal = ({
     }
   }, [isOpen]);
 
-  console.log(column, "col", task.status);
+useEffect(() => {
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "Enter") {
+      handleFormSubmit();
+    }
+  };
 
+  if (isOpen) {
+    window.addEventListener("keydown", handleKeyDown);
+  } else {
+    window.removeEventListener("keydown", handleKeyDown);
+  }
+
+  return () => {
+    window.removeEventListener("keydown", handleKeyDown);
+  };
+}, [isOpen, task]);
   const validateTitle = (title: string): string => {
     const isDuplicate = column
       ?.filter((t) => t.name === task.status)[0]
