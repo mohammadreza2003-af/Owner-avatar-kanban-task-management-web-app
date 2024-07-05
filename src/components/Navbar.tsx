@@ -50,7 +50,7 @@ const Navbar = () => {
           <img src="/assets/logo-mobile.svg" />
           <div className="flex items-center gap-x-2">
             <h2 className="md:text-2xl text-lg text-colorLightGrey font-bold">
-              {activeBoard?.name}
+              {activeBoard?.name ? activeBoard?.name : "No Board Found"}
             </h2>
             <RuButton
               functionlity={() => {
@@ -153,7 +153,7 @@ const Navbar = () => {
       </div>
       <div className="flex justify-between w-full items-center md:px-6 px-4 md:py-8 py-8">
         <h2 className="text-2xl text-colorLightGrey font-bold">
-          {activeBoard?.name}
+          {activeBoard?.name ? activeBoard?.name : "No Board Found"}
         </h2>
         <div className="flex items-center gap-x-6">
           <RuButton
